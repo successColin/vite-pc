@@ -1,5 +1,5 @@
-import axios, { type AxiosInstance, type AxiosRequestConfig } from "axios"
 import { useUserStoreHook } from "@/store/modules/user"
+import axios, { type AxiosInstance, type AxiosRequestConfig } from "axios"
 import { ElMessage } from "element-plus"
 import { get, merge } from "lodash-es"
 import { getToken } from "./cache/cookies"
@@ -10,13 +10,25 @@ function logout() {
   location.reload()
 }
 
+function removeEmpty(obj: Object) {
+  return Object.fromEntries(Object.entries(obj).filter(([_, v]) => v != null && v !== ""))
+}
+
 /** 创建请求实例 */
 function createService() {
   // 创建一个 axios 实例命名为 service
   const service = axios.create()
   // 请求拦截
   service.interceptors.request.use(
-    (config) => config,
+    (config) => {
+      if (config.params) {
+        config.params = removeEmpty(config.params)
+      }
+      if (JSON.stringify(config.data) !== "{}") {
+        config.data = removeEmpty(config.data)
+      }
+      return config
+    },
     // 发送失败
     (error) => Promise.reject(error)
   )
@@ -36,7 +48,8 @@ function createService() {
         return Promise.reject(new Error("非本系统的接口"))
       }
       switch (code) {
-        case 0:
+        // -1：异常 -2 登录验证失败 401：用户认证失败
+        case 200:
           // 本系统采用 code === 0 来表示没有业务错误
           return apiData
         case 401:
@@ -44,7 +57,7 @@ function createService() {
           return logout()
         default:
           // 不是正确的 code
-          ElMessage.error(apiData.message || "Error")
+          ElMessage.error(apiData.msg || "Error")
           return Promise.reject(new Error("Error"))
       }
     },
@@ -53,43 +66,43 @@ function createService() {
       const status = get(error, "response.status")
       switch (status) {
         case 400:
-          error.message = "请求错误"
+          error.msg = "请求错误"
           break
         case 401:
           // Token 过期时
           logout()
           break
         case 403:
-          error.message = "拒绝访问"
+          error.msg = "拒绝访问"
           break
         case 404:
-          error.message = "请求地址出错"
+          error.msg = "请求地址出错"
           break
         case 408:
-          error.message = "请求超时"
+          error.msg = "请求超时"
           break
         case 500:
-          error.message = "服务器内部错误"
+          error.msg = "服务器内部错误"
           break
         case 501:
-          error.message = "服务未实现"
+          error.msg = "服务未实现"
           break
         case 502:
-          error.message = "网关错误"
+          error.msg = "网关错误"
           break
         case 503:
-          error.message = "服务不可用"
+          error.msg = "服务不可用"
           break
         case 504:
-          error.message = "网关超时"
+          error.msg = "网关超时"
           break
         case 505:
-          error.message = "HTTP 版本不受支持"
+          error.msg = "HTTP 版本不受支持"
           break
         default:
           break
       }
-      ElMessage.error(error.message)
+      ElMessage.error(error.msg)
       return Promise.reject(error)
     }
   )

@@ -1,16 +1,18 @@
 <script lang="ts" setup>
-import { computed, watchEffect } from "vue"
-import { storeToRefs } from "pinia"
-import { useSettingsStore } from "@/store/modules/settings"
-import useResize from "./hooks/useResize"
-import { useWatermark } from "@/hooks/useWatermark"
 import { useDevice } from "@/hooks/useDevice"
 import { useLayoutMode } from "@/hooks/useLayoutMode"
-import LeftMode from "./LeftMode.vue"
-import TopMode from "./TopMode.vue"
-import LeftTopMode from "./LeftTopMode.vue"
-import { Settings, RightPanel } from "./components"
+import { useWatermark } from "@/hooks/useWatermark"
+import { useSettingsStore } from "@/store/modules/settings"
+import { useUserStore } from "@/store/modules/user"
 import { getCssVariableValue, setCssVariableValue } from "@/utils"
+import { storeToRefs } from "pinia"
+import { computed, watchEffect } from "vue"
+import LeftMode from "./LeftMode.vue"
+import LeftTopMode from "./LeftTopMode.vue"
+import TopMode from "./TopMode.vue"
+import { RightPanel, Settings } from "./components"
+import useResize from "./hooks/useResize"
+const userStore = useUserStore()
 
 /** Layout 布局响应式 */
 useResize()
@@ -40,7 +42,9 @@ watchEffect(() => {
 
 /** 开启或关闭系统水印 */
 watchEffect(() => {
-  showWatermark.value ? setWatermark(import.meta.env.VITE_APP_TITLE) : clearWatermark()
+  const userInfoObj = (userStore.userInfoObj as any) || {}
+  // import.meta.env.VITE_APP_TITLE
+  showWatermark.value ? setWatermark(userStore.username + "-" + userInfoObj?.phone?.slice(-4)) : clearWatermark()
 })
 </script>
 

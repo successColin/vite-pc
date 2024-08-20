@@ -34,11 +34,59 @@ export const resetConfigLayout = () => {
   location.reload()
 }
 
+export function exportFun(data: any, name: string) {
+  const blob = new Blob([data], { type: "application/vnd.ms-excel" })
+  const href = URL.createObjectURL(blob)
+  const a = document.createElement("a")
+  a.style.display = "none"
+  a.href = href
+  a.download = `${name}.xlsx`
+  a.click()
+  URL.revokeObjectURL(a.href)
+}
+
 export function registerGlobalComponents(app: App) {
-  const components = import.meta.glob("../components/*/index.vue")
+  const components = import.meta.glob("../components/**/index.vue")
   for (const [path, resolve] of Object.entries(components)) {
-    const componentName = path.replace("./", "").split("/")[1]
+    const arr = path.split("/")
+    const componentName = arr[arr.length - 2]
     const asyncComponent = defineAsyncComponent(() => resolve().then((mod) => (mod as any).default))
     app.component(componentName, asyncComponent)
   }
+}
+
+interface TreeNode {
+  value: number
+  label: string
+  children?: TreeNode[]
+}
+export function transformToTree(data: [any]): TreeNode[] {
+  const map = new Map<number, TreeNode>()
+
+  // Initialize nodes
+  data.forEach((item) => {
+    map.set(item.id, {
+      value: item.id,
+      label: item.category_name,
+      children: []
+    })
+  })
+  console.log(data)
+
+  const result: TreeNode[] = []
+
+  // Build tree structure
+  data.forEach((item) => {
+    const node = map.get(item.id)!
+    if (item.pid === 0) {
+      result.push(node)
+    } else {
+      const parentNode = map.get(item.pid)
+      if (parentNode) {
+        parentNode.children!.push(node)
+      }
+    }
+  })
+
+  return result
 }

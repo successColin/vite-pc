@@ -25,14 +25,20 @@ export default ({ mode }: ConfigEnv): UserConfigExport => {
       host: true,
       port: 8080,
       open: true,
-      cors: true,
-      strictPort: false,
+      // cors: true,
+      strictPort: false, // 端口已被占用则会直接退出，而不是尝试下一个可用端口
       proxy: {
-        "/api/v1": {
-          target: "https://mock.mengxuegu.com/mock/63218b5fb4c53348ed2bc212",
-          ws: true,
+        "/admin": {
+          // target: "http://km_sso.51api.dcqcjlb.com",  // 门户
+          target: "http://172.16.91.218:8080", // ljn本地
+          // target: "http://repair.51api.dcqcjlb.com", // 测试
           changeOrigin: true
         }
+        // "/api/v1": {
+        //   target: "https://mock.mengxuegu.com/mock/63218b5fb4c53348ed2bc212",
+        //   ws: true,
+        //   changeOrigin: true
+        // }
       },
       /** 预热常用文件，提高初始页面加载速度 */
       warmup: {

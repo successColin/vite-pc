@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import systemConfig from "@/config"
 import { useDevice } from "@/hooks/useDevice"
 import { useLayoutMode } from "@/hooks/useLayoutMode"
 import { useAppStore } from "@/store/modules/app"
@@ -27,7 +28,7 @@ const toggleSidebar = () => {
 /** 登出 */
 const logout = () => {
   userStore.logout()
-  router.push("/login")
+  window.location.href = systemConfig.portalSystemUrl.toString()
 }
 </script>
 
@@ -53,12 +54,6 @@ const logout = () => {
         </div>
         <template #dropdown>
           <el-dropdown-menu>
-            <a target="_blank" href="https://github.com/un-pany/v3-admin-vite">
-              <el-dropdown-item>GitHub</el-dropdown-item>
-            </a>
-            <a target="_blank" href="https://gitee.com/un-pany/v3-admin-vite">
-              <el-dropdown-item>Gitee</el-dropdown-item>
-            </a>
             <el-dropdown-item divided @click="logout">
               <span style="display: block">退出登录</span>
             </el-dropdown-item>

@@ -111,6 +111,7 @@ export function useWatermark(parentEl: Ref<HTMLElement | null> = bodyEl) {
       ctx.fillStyle = color
       ctx.globalAlpha = opacity
       ctx.font = `${size}px ${family}`
+      ctx.fillStyle = "#e8e8e8"
       ctx.rotate((Math.PI / 180) * angle)
       ctx.fillText(backupText, 0, height / 2)
     }

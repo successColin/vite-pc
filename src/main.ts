@@ -5,8 +5,6 @@ import router from "@/router"
 import "@/router/permission"
 import store from "@/store"
 import "@/styles/index.scss"
-import "element-plus/dist/index.css"
-import "element-plus/theme-chalk/dark/css-vars.css"
 import "normalize.css"
 import "uno.css"
 import "virtual:svg-icons-register"
@@ -22,7 +20,6 @@ const app = createApp(App)
 loadPlugins(app)
 /** 加载自定义指令 */
 loadDirectives(app)
-// 注册全局组件
 registerGlobalComponents(app)
 app.use(store).use(router)
 router.isReady().then(() => {

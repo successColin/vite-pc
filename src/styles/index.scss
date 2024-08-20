@@ -56,3 +56,53 @@ a:hover {
 div:focus {
   outline: none;
 }
+
+::-webkit-scrollbar {
+  height: 9px;
+  width: 9px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  border-style: dashed;
+  border-color: transparent;
+  border-width: 2px;
+  background-color: rgba(157, 165, 183, 0.3);
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(157, 165, 183, 0.6);
+}
+
+.contentBoxGlobal {
+  height: 100%;
+  padding: 10px;
+  margin: 10px;
+  box-sizing: border-box;
+  overflow: auto;
+}
+
+.toolbar-wrapper {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.search-wrapper {
+  margin-bottom: 10px;
+  .el-card__body {
+    padding-bottom: 2px !important;
+  }
+}
+.table-wrapper {
+  width: 100%;
+  margin-bottom: 20px;
+}
+.pager-wrapper {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.w-e-text-placeholder {
+  display: none !important;
+}
